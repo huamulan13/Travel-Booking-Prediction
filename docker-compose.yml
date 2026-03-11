@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+
+  ds_app:
+    build: .
+    container_name: tiket_ds
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    container_name: tiket_db
+    restart: always
+    environment:
+      POSTGRES_USER: tiket
+      POSTGRES_PASSWORD: tiket123
+      POSTGRES_DB: travel_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  notebook:
+    image: jupyter/scipy-notebook
+    container_name: tiket_notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/jovyan/work
